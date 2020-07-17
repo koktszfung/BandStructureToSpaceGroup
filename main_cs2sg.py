@@ -13,6 +13,7 @@ def main_one(csnum):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     # prepare neural network
+    validate_size = 0.1
     num_bands = 100
     hs_indices = [0, 1, 3, 4, 5, 7, 8, 13, 31, 34, 37]  # 11 hs points in Brillouin zone out of 40
 
@@ -21,9 +22,9 @@ def main_one(csnum):
 
     model = torch.nn.Sequential(
         torch.nn.LeakyReLU(),
-        torch.nn.Linear(len(hs_indices)*num_bands, 100),
+        torch.nn.Linear(len(hs_indices)*num_bands, 300),
         torch.nn.LeakyReLU(),
-        torch.nn.Linear(100, 100),
+        torch.nn.Linear(300, 100),
         torch.nn.LeakyReLU(),
         torch.nn.Linear(100, output_sizes),
         torch.nn.LeakyReLU(),
@@ -49,18 +50,18 @@ def main_one(csnum):
         return data_input_np, data_label_np
 
     dataset = data_loader.AnyDataset(f"list/actual/crystal_list_{csnum}.txt", json2inputlabel)
-    valid_loader, train_loader = data_loader.get_valid_train_loader(dataset, 32, 0.1)
+    validate_loader, train_loader = data_loader.get_validate_train_loader(dataset, 32, validate_size)
 
     # train
     function_training.validate_train_loop(
-        device, model, optimizer, scheduler, criterion, valid_loader, train_loader,
-        num_epoch=10, num_epoch_per_valid=5, state_dict_path=f"state_dicts/state_dict_cs2sg_{csnum}"
+        device, model, optimizer, scheduler, criterion, validate_loader, train_loader,
+        num_epoch=1, num_epoch_per_validate=5, state_dict_path=f"state_dicts/state_dict_cs2sg_{csnum}"
     )
 
     # apply
     function_list.append_guess_spacegroup_in_crystal_list_files(
-        device, model, csnum, hs_indices,
-        in_list_path="list/actual/valid_list.txt",
+        device, model, csnum, hs_indices, split=int(validate_size*len(dataset)),
+        in_list_path=f"list/actual/crystal_list_{csnum}.txt",
         out_list_path_format="list/guess/spacegroup_list_{}.txt"
     )
 
@@ -68,11 +69,7 @@ def main_one(csnum):
     winsound.Beep(200, 500)
 
 
-def main_all():
-    for i in range(1, 8):
-        main_one(i)
-
-
 if __name__ == '__main__':
     function_list.create_empty_list_files(230, out_list_path_format="list/guess/spacegroup_list_{}.txt")
-    main_all()
+    for i in range(1, 8):
+        main_one(i)

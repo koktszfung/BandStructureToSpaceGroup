@@ -21,14 +21,15 @@ def train_one_epoch(device, model, optimizer, criterion, train_loader):
     return round(loss_epoch, 4)
 
 
-def validate_one_epoch(device, model, criterion, valid_loader):
+def validate_one_epoch(device, model, criterion, validate_loader):
     model.eval()
-    num_valid = len(valid_loader.sampler.indices)
-    if num_valid == 0:
-        raise FileNotFoundError("number of data is 0")
+    num_validate = len(validate_loader.sampler.indices)
+    if num_validate == 0:
+        print("number of data is 0")
+        return -1, -1
     val_loss = 0.
     num_correct = 0
-    for b, (batch_input, batch_label) in enumerate(valid_loader):
+    for b, (batch_input, batch_label) in enumerate(validate_loader):
         for i in range(len(batch_input)):
             # read data
             data_input, data_label = batch_input[i], batch_label[i]
@@ -39,20 +40,20 @@ def validate_one_epoch(device, model, criterion, valid_loader):
             val_loss += criterion(output, data_label).item()
             if torch.max(output, 1)[1] == data_label:
                 num_correct += 1
-        print("\r\tvalid batch:{}/{}".format(b, len(valid_loader)), end="")
-    num_correct /= num_valid
+        print("\r\tvalidate batch:{}/{}".format(b, len(validate_loader)), end="")
+    num_correct /= num_validate
     return round(val_loss, 4), round(num_correct*100, 4)
 
 
-def validate_train_loop(device, model, optimizer, scheduler, criterion, valid_loader, train_loader,
-                        num_epoch, num_epoch_per_valid, state_dict_path):
-    result = validate_one_epoch(device, model, criterion, valid_loader)
-    print("\rvalid loss:{} accuracy:{}%".format(*result))
+def validate_train_loop(device, model, optimizer, scheduler, criterion, validate_loader, train_loader,
+                        num_epoch, num_epoch_per_validate, state_dict_path):
+    result = validate_one_epoch(device, model, criterion, validate_loader)
+    print("\rvalidate loss:{} accuracy:{}%".format(*result))
     for epoch in range(num_epoch):
         result = train_one_epoch(device, model, optimizer, criterion, train_loader)
         print("\rtrain epoch:{} loss:{}".format(epoch, result))
-        if (epoch + 1) % num_epoch_per_valid == 0:
-            result = validate_one_epoch(device, model, criterion, valid_loader)
-            print("\rvalid loss:{} accuracy:{}%".format(*result))
+        if (epoch + 1) % num_epoch_per_validate == 0:
+            result = validate_one_epoch(device, model, criterion, validate_loader)
+            print("\rvalidate loss:{} accuracy:{}%".format(*result))
         scheduler.step()
-    torch.save(model.state_dict(), state_dict_path)
+    torch.save(model.state_dict, state_dict_path)

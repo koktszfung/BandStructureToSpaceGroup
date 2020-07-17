@@ -39,7 +39,7 @@ def print_result(group_numbers, guess_list_dir, actual_list_dir, list_format):
     print("FN:", actual_total - guess_correct)
 
 
-def get_counts(num_groups, guess_list_path_format, json2label):
+def get_confusion(num_groups, guess_list_path_format, json2label):
     confusion = np.zeros((num_groups, num_groups)).astype(int)
     for i in range(num_groups):
         if os.stat(guess_list_path_format.format(i+1)).st_size == 0:
@@ -55,10 +55,11 @@ def get_counts(num_groups, guess_list_path_format, json2label):
     confusion = confusion/np.maximum(1, confusion.sum(0))[None, :]
     plt.figure(figsize=(10, 10))
     plt.gca().matshow(confusion, cmap="cividis")
-    for i in range(num_groups):
-        for j in range(num_groups):
-            c = confusion[i, j]
-            # plt.gca().text(j, i, f"{c:.2f}", va='center', ha='center', color="grey")
+    if num_groups < 50:
+        for i in range(num_groups):
+            for j in range(num_groups):
+                c = confusion[i, j]
+                plt.gca().text(j, i, f"{c:.2f}", va='center', ha='center', color="grey")
     plt.gca().set_ylabel("Guess")
     plt.gca().xaxis.set_label_position('top')
     plt.gca().set_xlabel("Actual")

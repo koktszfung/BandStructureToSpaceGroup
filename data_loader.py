@@ -1,6 +1,6 @@
 import os
 import json
-import numpy
+import numpy as np
 
 import torch
 from torch.utils.data import Dataset
@@ -15,8 +15,7 @@ class AnyDataset(Dataset):
         if os.stat(in_list_path).st_size == 0:
             raise OSError("list is empty")
 
-        file_names = numpy.loadtxt(in_list_path, "U90", ndmin=1)
-        numpy.random.shuffle(file_names)
+        file_names = np.loadtxt(in_list_path, "U90", ndmin=1)
         for i, file_name in enumerate(file_names):
             with open(file_name, "r") as file:
                 data_json = json.load(file)
@@ -35,15 +34,15 @@ class AnyDataset(Dataset):
         return self.data_inputs[index], self.data_labels[index]
 
 
-def get_valid_train_loader(dataset, batch_size, valid_size):
+def get_validate_train_loader(dataset, batch_size, validate_size):
     num_train = len(dataset)
     indices = list(range(num_train))
-    split = int(numpy.floor(valid_size * num_train))
+    split = int(validate_size * num_train)
 
-    valid_sampler = SubsetRandomSampler(indices[:split])
+    validate_sampler = SubsetRandomSampler(indices[:split])
     train_sampler = SubsetRandomSampler(indices[split:])
 
-    valid_loader = DataLoader(dataset, batch_size=batch_size, sampler=valid_sampler)
+    validate_loader = DataLoader(dataset, batch_size=batch_size, sampler=validate_sampler)
     train_loader = DataLoader(dataset, batch_size=batch_size, sampler=train_sampler)
 
-    return valid_loader, train_loader
+    return validate_loader, train_loader

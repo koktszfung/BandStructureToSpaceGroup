@@ -11,6 +11,7 @@ def main():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     # prepare neural network
+    validate_size = 0.1
     num_bands = 100
     hs_indices = [0, 1, 3, 4, 5, 7, 8, 13, 31, 34, 37]  # 11 hs points in Brillouin zone out of 40
 
@@ -36,17 +37,17 @@ def main():
         return data_input_np, data_label_np
 
     dataset = data_loader.AnyDataset("list/actual/valid_list.txt", json2inputlabel)
-    valid_loader, train_loader = data_loader.get_valid_train_loader(dataset, 32, 0.1)
+    validate_loader, train_loader = data_loader.get_validate_train_loader(dataset, 32, validate_size)
 
     # train
     function_training.validate_train_loop(
-        device, model, optimizer, scheduler, criterion, valid_loader, train_loader,
-        num_epoch=20, num_epoch_per_valid=5, state_dict_path="state_dicts/state_dict_bs2sg"
+        device, model, optimizer, scheduler, criterion, validate_loader, train_loader,
+        num_epoch=10, num_epoch_per_validate=5, state_dict_path="state_dicts/state_dict_bs2sg"
     )
 
     # apply
     function_list.create_guess_list_files(
-        device, model, hs_indices, num_group=230,
+        device, model, hs_indices, num_group=230, split=int(validate_size*len(dataset)),
         in_list_path="list/actual/valid_list.txt",
         out_list_path_format="list/guess/spacegroup_list_{}.txt"
     )

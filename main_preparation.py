@@ -1,7 +1,16 @@
+import os
+
 import function_list
 
 
 if __name__ == "__main__":
+    for required_dir in ["list/", "list/actual/", "list/guess/", "state_dicts/"]:
+        if not os.path.exists(required_dir):
+            os.mkdir(required_dir)
+            print(f"made dir \"{required_dir}\"")
+        else:
+            print(f"dir \"{required_dir}\"")
+
     # prepare input data # (Do this every time dataset is changed)
     function_list.create_valid_list_file(
         num_bands=100,
