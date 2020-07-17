@@ -1,0 +1,85 @@
+
+Prepare data
+
+1. pymatgen api -> download data and turn them into json file
+    some of the data cannot be downloaded, some changed id, some take too long to download
+
+2. Bin's code -> change data into standard format by padding zero
+    same shape (number of row: number of band, number of column: number of high symmetry kpoint)
+    centered around fermi energy (E - E_f = 0)
+
+3. main_preparation.py, list_function -> create a list containing the address of data
+    id of data run from 0 to 1M, but not all are available
+    this has to be done every time the data pack is changed because data in each pack may be different
+
+4. main_preparation.py, list_function -> create a list for each spacegroup containing address of data in that spacegroup
+    230 in total
+    the label of spacegroup is available in the json file downloaded
+
+
+
+Prepare training
+
+1. main_training.py -> define the structure of the neural network
+    1. size of each layer (number of input, number of output)
+    2. activation function between each layer
+
+2. main_training.py -> choose how to train
+    1. optimizer
+        method of optimization (predict the direction to the position of minimum)
+        usually Adam
+    2. scheduler
+        method of changing the learning rate each epoch
+    3. criterion
+        method of determining the performance
+        usually Cross Entropy Loss for classification
+
+3. main_training.py, data_set.py -> create dataset
+    1. read id list
+    2. shuffle the order of id
+    3. open the file of the corresponding id
+    4. load json
+    5. store bandstructure and spacegroup number as two separate nd-array (matrix) in memory
+        bandstructure is the input data, array shape: (no of band, no of kpoint, no of data)
+        spacegroup number is the label, array shape: (no of data)
+
+4. main_training.py, data_loader.py -> create dataloader object
+    1. split the data into two part: Training, Validation
+    2. sampler
+        how to sample date in a dataset
+
+
+
+Start training
+
+1. main_training.py, training_function.py -> train loop
+    1. get data from dataloader
+        do "to(device)" in order to use gpu (otherwise error would occur)
+    2. feed data through network
+    3. evaluate loss (using criterion)
+    4. calculate gradient by calling loss.backward()
+        now the gradient is stored in memory
+    5. update weight inside each layer of the neural network (using optimizer)
+
+2. main_training.py, training_function.py -> validate loop (check if the network is overfitting)
+    1. get data from dataloader
+    2. feed data through network
+    3. evaluate loss and check if the most probable one match with the label
+    4. accumulate the loss and number of correct guess
+    5. calculate the average performance
+
+3. save the trained weight
+    serialization and deserialization
+        https://pytorch.org/tutorials/beginner/saving_loading_models.html#save-load-state-dict-recommended
+    not implemented yet, because there are lots of changes, and we are still in the stage of prototyping
+
+
+
+After training
+
+1. main_training.py, list_function.py -> create spacegroup list base on prediction of the neural network
+
+2. main_analysis.py, analysis_function.py -> evaluate performance, compare guessed result with answer
+    1. calculate True Positive, True Negative, False Positive, True Negative
+    2. calculate Accuracy, Precision, Sensitivity, etc.
+    https://towardsdatascience.com/accuracy-recall-precision-f-score-specificity-which-to-optimize-on-867d3f11124
