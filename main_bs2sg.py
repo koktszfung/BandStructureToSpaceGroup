@@ -16,9 +16,9 @@ def main():
 
     model = torch.nn.Sequential(
         torch.nn.LeakyReLU(),
-        torch.nn.Linear(len(hs_indices)*num_bands, 100),
+        torch.nn.Linear(len(hs_indices)*num_bands, 300),
         torch.nn.LeakyReLU(),
-        torch.nn.Linear(100, 100),
+        torch.nn.Linear(300, 100),
         torch.nn.LeakyReLU(),
         torch.nn.Linear(100, 230),
         torch.nn.LeakyReLU(),
@@ -41,7 +41,7 @@ def main():
     # train
     function_training.validate_train_loop(
         device, model, optimizer, scheduler, criterion, valid_loader, train_loader,
-        num_epoch=1, num_epoch_per_valid=3, state_dict_path="state_dict/state_dict_bs2sg"
+        num_epoch=20, num_epoch_per_valid=5, state_dict_path="state_dicts/state_dict_bs2sg"
     )
 
     # apply

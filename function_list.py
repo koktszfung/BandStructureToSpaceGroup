@@ -73,3 +73,25 @@ def create_guess_list_files(device, model, hs_indices, num_group, in_list_path, 
             file_out.write(file_path + "\n")
         print("\r\tcreate guess list: {}/{}".format(i, len(file_paths)), end="")
     print("\rcreate guess list: {}".format(len(file_paths)))
+
+
+def append_guess_spacegroup_in_crystal_list_files(device, model, csnum, hs_indices, in_list_path, out_list_path_format):
+    if os.stat(in_list_path).st_size == 0:
+        return
+    file_paths = numpy.loadtxt(in_list_path, "U60")
+    for i, file_path in enumerate(file_paths):
+        with open(file_path, "r") as file:
+            data_json = json.load(file)
+        data_input_np = numpy.array(data_json["bands"])
+        data_input_np = data_input_np[:, hs_indices].flatten().T
+        data_input = torch.from_numpy(data_input_np).float()
+
+        output = model(data_input.to(device))
+        sgnum = torch.max(output, 0)[1].item() + 1 + crystal.spacegroup_index_lower(csnum)
+        if sgnum not in crystal.spacegroup_number_range(csnum):
+            print("\r\tcreate guess list: {}/{}".format(i, len(file_paths)), end="")
+            continue
+        with open(out_list_path_format.format(sgnum), "a") as file_out:
+            file_out.write(file_path + "\n")
+        print("\r\tcreate guess list: {}/{}".format(i, len(file_paths)), end="")
+    print("\rcreate guess list: {}".format(len(file_paths)))
