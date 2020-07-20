@@ -35,8 +35,7 @@ def main():
         data_input_np = np.array(data_json["bands"])[:, hs_indices].flatten().T
         data_label_np = np.array([data_json["number"] - 1])
         return data_input_np, data_label_np
-
-    dataset = data_loader.AnyDataset("list/actual/valid_list.txt", json2inputlabel)
+    dataset = data_loader.AnyDataset("list/valid_list.txt", json2inputlabel)
     validate_loader, train_loader = data_loader.get_validate_train_loader(dataset, 32, validate_size)
 
     # train
@@ -46,9 +45,14 @@ def main():
     )
 
     # apply
-    function_list.create_guess_list_files(
+    # function_list.create_guess_list_files(
+    #     device, model, hs_indices, num_group=230, split=int(validate_size*len(dataset)),
+    #     in_list_path="list/valid_list.txt",
+    #     out_list_path_format="list/guess/spacegroup_list_{}.txt"
+    # )
+    function_list.create_any_guess_list_files(
         device, model, hs_indices, num_group=230, split=int(validate_size*len(dataset)),
-        in_list_path="list/actual/valid_list.txt",
+        in_list_path="list/valid_list.txt",
         out_list_path_format="list/guess/spacegroup_list_{}.txt"
     )
 

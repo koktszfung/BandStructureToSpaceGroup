@@ -51,7 +51,6 @@ def get_confusion(num_groups, guess_list_path_format, json2label):
             confusion[i, json2label(data_json)] += 1  # (guess, actual)
         print(f"\r\t{i}/{num_groups}", end="")
     print(f"\r{num_groups}/{num_groups}")
-
     confusion = confusion/np.maximum(1, confusion.sum(0))[None, :]
     plt.figure(figsize=(4, 4))
     plt.gca().matshow(confusion, cmap="cividis")

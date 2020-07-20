@@ -6,7 +6,7 @@ import data_loader
 import function_training
 import function_list
 
-import crystalsystem
+import latticesystem
 
 
 def main():
@@ -35,7 +35,7 @@ def main():
     # prepare data
     def json2inputlabel(data_json):
         data_input_np = np.array(data_json["bands"])[:, hs_indices].flatten().T
-        data_label_np = np.array([crystalsystem.crystalsystem_number(data_json["number"]) - 1])
+        data_label_np = np.array([latticesystem.latticesystem_number(data_json["number"]) - 1])
         return data_input_np, data_label_np
     dataset = data_loader.AnyDataset("list/valid_list.txt", json2inputlabel)
     validate_loader, train_loader = data_loader.get_validate_train_loader(dataset, 32, validate_size)
@@ -43,14 +43,14 @@ def main():
     # train
     function_training.validate_train_loop(
         device, model, optimizer, scheduler, criterion, validate_loader, train_loader,
-        num_epoch=10, num_epoch_per_validate=5, state_dict_path="state_dicts/state_dict_bs2cs"
+        num_epoch=10, num_epoch_per_validate=5, state_dict_path="state_dicts/state_dict_bs2ls"
     )
 
     # apply
     function_list.create_any_guess_list_files(
         device, model, hs_indices, num_group=7, split=int(validate_size*len(dataset)),
         in_list_path="list/valid_list.txt",
-        out_list_path_format="list/guess/crystalsystem_list_{}.txt"
+        out_list_path_format="list/guess/latticesystem_list_{}.txt"
     )
 
     import winsound
