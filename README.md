@@ -1,4 +1,4 @@
- ##Instruction
+ ## Instruction
  1. change in_data_dir in main_preparation to specify the directory of data 
  
  2. run main_preparation to prepare directory and list files
@@ -8,8 +8,8 @@
  4. run main_analysis to see confusion matrix
  
 ![confusion_matrix_bs2cs](confusion_matrix_bs2cs.png)
-##Details 
-###Prepare data
+## Details 
+### Prepare data
 1. download data from [material project](https://materialsproject.org/) using [pymatgen](https://pymatgen.org/)'s api
 
 2. formate data using [Bin's code](https://github.com/binxi0629/NN-project/tree/master/format_data)
@@ -24,7 +24,7 @@
 
 
 
-###Prepare training
+### Prepare training
 
 1. define the structure of the neural network --- main_training.py
     1. size of each layer (number of input, number of output)
@@ -55,7 +55,7 @@
 
 
 
-###Start training
+### Start training
 
 1. train loop --- main_training.py, function_tranining.py
     1. get data from dataloader
@@ -74,7 +74,7 @@
     5. calculate the average performance
 
 
-###After training
+### After training
 
 1. create spacegroup list base on prediction of the neural network --- main_training.py, function_list.py
 
