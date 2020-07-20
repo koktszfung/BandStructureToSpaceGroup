@@ -18,7 +18,7 @@ def correct_count(group_numbers, guess_list_dir, actual_list_dir, list_format):
             guesses = set([line.split("/")[-1] for line in list_file.readlines()])
         with open(actual_list_dir + list_format.format(index), "r") as list_file:
             actuals = set([line.split("/")[-1] for line in list_file.readlines()])
-        counts[i] = len(set.intersection(guesses, actuals))
+        counts[i] = len(set.intersection(guesses, actuals))  # compare two set
     return counts
 
 
@@ -53,15 +53,17 @@ def get_confusion(num_groups, guess_list_path_format, json2label):
     print(f"\r{num_groups}/{num_groups}")
 
     confusion = confusion/np.maximum(1, confusion.sum(0))[None, :]
-    plt.figure(figsize=(10, 10))
+    plt.figure(figsize=(4, 4))
     plt.gca().matshow(confusion, cmap="cividis")
     if num_groups < 50:
         for i in range(num_groups):
             for j in range(num_groups):
                 c = confusion[i, j]
-                plt.gca().text(j, i, f"{c:.2f}", va='center', ha='center', color="grey")
+                plt.gca().text(j, i, f"{c:.2f}", va='center', ha='center', color="grey", fontsize=12)
     plt.gca().set_ylabel("Guess")
     plt.gca().xaxis.set_label_position('top')
     plt.gca().set_xlabel("Actual")
+    plt.xticks(range(7), ["TRI", "MCL", "ORC", "TET", "TRG", "HEX", "CUB"])
+    plt.yticks(range(7), ["TRI", "MCL", "ORC", "TET", "TRG", "HEX", "CUB"])
     plt.show()
     return confusion

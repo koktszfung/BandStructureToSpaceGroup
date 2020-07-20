@@ -2,5 +2,6 @@
 __pycache__/
 data/
 list/
+state_dicts/
 old/
 playground.py

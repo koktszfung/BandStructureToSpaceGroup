@@ -19,9 +19,9 @@ def main():
 
     model = torch.nn.Sequential(
         torch.nn.LeakyReLU(),
-        torch.nn.Linear(len(hs_indices)*num_bands, 100),
+        torch.nn.Linear(len(hs_indices)*num_bands, 300),
         torch.nn.LeakyReLU(),
-        torch.nn.Linear(100, 100),
+        torch.nn.Linear(300, 100),
         torch.nn.LeakyReLU(),
         torch.nn.Linear(100, 7),
         torch.nn.LeakyReLU(),

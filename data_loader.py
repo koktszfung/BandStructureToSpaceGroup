@@ -19,6 +19,7 @@ class AnyDataset(Dataset):
         for i, file_name in enumerate(file_names):
             with open(file_name, "r") as file:
                 data_json = json.load(file)
+            # json2inputlabel is a function parsed to init, which handles a json dict and give input and label
             data_input_np, data_label_np = json2inputlabel(data_json)
             self.data_inputs.append(torch.from_numpy(data_input_np).float())
             self.data_labels.append(torch.from_numpy(data_label_np).long())
