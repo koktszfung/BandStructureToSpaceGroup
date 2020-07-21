@@ -30,8 +30,8 @@ def create_empty_list_files(out_num_group, out_list_path_format):
         open(out_list_path_format.format(i + 1), "w").close()
 
 
-def create_any_actual_list_files(num_groups, in_list_path, out_list_path_format, sgnum2outnum, seed=None):
-    create_empty_list_files(num_groups, out_list_path_format)  # empty files for appending
+def create_any_actual_list_files(num_group, in_list_path, out_list_path_format, sgnum2outnum, seed=None):
+    create_empty_list_files(num_group, out_list_path_format)  # empty files for appending
     file_paths = np.loadtxt(in_list_path, "U90")
     if seed is not None:
         np.random.seed(seed)
@@ -47,25 +47,31 @@ def create_any_actual_list_files(num_groups, in_list_path, out_list_path_format,
     print("\rcreate actual list: {}".format(len(file_paths)))
 
 
-def append_any_guess_list_files(device, model, hs_indices, num_group, split, in_list_path, out_list_path_format):
-    file_paths = np.loadtxt(in_list_path, "U90")[:split]
-    for i, file_path in enumerate(file_paths):
-        with open(file_path, "r") as file:
-            data_json = json.load(file)
-        data_input_np = np.array(data_json["bands"])
-        data_input_np = data_input_np[:, hs_indices].flatten().T
-        data_input = torch.from_numpy(data_input_np).float()
-        output = model(data_input.to(device))  # feed through the neural network
-        outnum = torch.max(output, 0)[1].item() + 1  # predicted with the most confidence
-        if outnum > num_group:
-            continue
-        with open(out_list_path_format.format(outnum), "a") as file_out:
-            file_out.write(file_path + "\n")
-        print("\r\tcreate guess list: {}/{}".format(i, len(file_paths)), end="")
-    print("\rcreate guess list: {}".format(len(file_paths)))
+def append_any_guess_list_files(device, model, hs_indices, validate_size, num_group,
+                                in_list_paths, out_list_path_format):
+    for in_list_path in in_list_paths:
+        file_paths = np.loadtxt(in_list_path, "U90")
+        split = int(validate_size*len(file_paths))
+        for i, file_path in enumerate(file_paths):
+            if i > split:
+                break
+            with open(file_path, "r") as file:
+                data_json = json.load(file)
+            data_input_np = np.array(data_json["bands"])
+            data_input_np = data_input_np[:, hs_indices].flatten().T
+            data_input = torch.from_numpy(data_input_np).float()
+            output = model(data_input.to(device))  # feed through the neural network
+            outnum = torch.max(output, 0)[1].item() + 1  # predicted with the most confidence
+            if outnum > num_group:
+                continue
+            with open(out_list_path_format.format(outnum), "a") as file_out:
+                file_out.write(file_path + "\n")
+            print("\r\tcreate guess list: {}/{}".format(i, len(file_paths)), end="")
+        print("\rcreate guess list: {}".format(len(file_paths)))
 
 
-def create_any_guess_list_files(device, model, hs_indices, num_group, split,
-                                in_list_path, out_list_path_format):
+def create_any_guess_list_files(device, model, hs_indices, validate_size, num_group,
+                                in_list_paths, out_list_path_format):
     create_empty_list_files(num_group, out_list_path_format)
-    append_any_guess_list_files(device, model, hs_indices, num_group, split, in_list_path, out_list_path_format)
+    append_any_guess_list_files(device, model, hs_indices, validate_size, num_group,
+                                in_list_paths, out_list_path_format)

@@ -37,19 +37,22 @@ def main():
         data_input_np = np.array(data_json["bands"])[:, hs_indices].flatten().T
         data_label_np = np.array([crystalsystem.crystalsystem_number(data_json["number"]) - 1])
         return data_input_np, data_label_np
-    dataset = data_loader.AnyDataset("list/valid_list.txt", json2inputlabel)
-    validate_loader, train_loader = data_loader.get_validate_train_loader(dataset, 32, validate_size)
+    dataset = data_loader.AnyDataset(
+        [f"list/actual/crystalsystem_list_{csnum}.txt" for csnum in range(1, 8)],
+        json2inputlabel, validate_size
+    )
+    validate_loader, train_loader = data_loader.get_validate_train_loader(dataset, 32)
 
     # train
     function_training.validate_train_loop(
         device, model, optimizer, scheduler, criterion, validate_loader, train_loader,
-        num_epoch=10, num_epoch_per_validate=5, state_dict_path="state_dicts/state_dict_bs2cs"
+        num_epoch=15, num_epoch_per_validate=5, state_dict_path="state_dicts/state_dict_bs2cs"
     )
 
     # apply
     function_list.create_any_guess_list_files(
-        device, model, hs_indices, num_group=7, split=int(validate_size*len(dataset)),
-        in_list_path="list/valid_list.txt",
+        device, model, hs_indices, validate_size, num_group=7,
+        in_list_paths=[f"list/actual/crystalsystem_list_{csnum}.txt" for csnum in range(1, 8)],
         out_list_path_format="list/guess/crystalsystem_list_{}.txt"
     )
 

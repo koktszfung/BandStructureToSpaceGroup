@@ -1,23 +1,23 @@
-def latticesystem_number(sg: int):
-    for ls, margin in enumerate([2, 15, 74, 142, 149, 194, 230]):
-        if sg <= margin:
-            return ls + 1
+def latticesystem_number(sgnum: int):
+    for lsnum, margin in enumerate([2, 15, 74, 142, 149, 194, 230]):
+        if sgnum <= margin:
+            return lsnum + 1
 
 
-def spacegroup_index_lower(ls: int):
+def spacegroup_index_lower(lsnum: int):
     margins = [2, 15, 74, 142, 149, 194, 230]
-    lower = margins[ls - 2] if ls > 1 else 0
+    lower = margins[lsnum - 2] if lsnum > 1 else 0
     return lower
 
 
-def spacegroup_index_upper(ls: int):
+def spacegroup_index_upper(lsnum: int):
     margins = [2, 15, 74, 142, 149, 194, 230]
-    upper = margins[ls - 1]
+    upper = margins[lsnum - 1]
     return upper
 
 
-def spacegroup_number_range(ls: int):
-    return range(spacegroup_index_lower(ls) + 1, spacegroup_index_upper(ls) + 1)
+def spacegroup_number_range(lsnum: int):
+    return range(spacegroup_index_lower(lsnum) + 1, spacegroup_index_upper(lsnum) + 1)
 
 
 def latticesystem_sizes():

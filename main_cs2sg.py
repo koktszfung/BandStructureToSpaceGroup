@@ -48,8 +48,11 @@ def main_one(csnum):
         else:
             data_label_np = np.array([crystal_size])
         return data_input_np, data_label_np
-    dataset = data_loader.AnyDataset(f"list/actual/crystalsystem_list_{csnum}.txt", json2inputlabel)
-    validate_loader, train_loader = data_loader.get_validate_train_loader(dataset, 32, validate_size)
+    dataset = data_loader.AnyDataset(
+        [f"list/actual/spacegroup_list_{sgnum}.txt" for sgnum in crystalsystem.spacegroup_number_range(csnum)],
+        json2inputlabel, validate_size
+    )
+    validate_loader, train_loader = data_loader.get_validate_train_loader(dataset, 32)
 
     # train
     function_training.validate_train_loop(
@@ -59,8 +62,8 @@ def main_one(csnum):
 
     # apply
     function_list.append_any_guess_list_files(
-        device, model, hs_indices, split=int(validate_size*len(dataset)),
-        in_list_path=f"list/actual/crystalsystem_list_{csnum}.txt",
+        device, model, hs_indices, validate_size, num_group=230,
+        in_list_paths=[f"list/actual/spacegroup_list_{sgnum}.txt" for sgnum in crystalsystem.spacegroup_number_range(csnum)],
         out_list_path_format="list/guess/spacegroup_list_{}.txt"
     )
 
