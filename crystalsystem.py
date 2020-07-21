@@ -1,7 +1,7 @@
 def crystalsystem_number(sgnum: int):
-    for csnum, margin in enumerate([2, 15, 74, 142, 167, 194, 230]):
+    for csindex, margin in enumerate([2, 15, 74, 142, 167, 194, 230]):
         if sgnum <= margin:
-            return csnum + 1
+            return csindex + 1
 
 
 def spacegroup_index_lower(csnum: int):
