@@ -40,7 +40,7 @@ if __name__ == "__main__":
     # )
     #
     function_list.create_any_actual_list_files(
-        num_group=15, in_list_path="list/valid_list.txt",
+        num_group=14, in_list_path="list/valid_list.txt",
         out_list_path_format="list/actual/bravaislattice_list_{}.txt",
         sgnum2outnum=lambda sgnum: bravaislattice.bravaislattice_number(sgnum)
     )

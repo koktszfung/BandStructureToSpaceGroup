@@ -47,7 +47,7 @@ if __name__ == '__main__':
     # )
 
     function_analysis.print_result(
-        group_numbers=range(1, 16),
+        group_numbers=range(1, 15),
         guess_list_dir="list/guess/",
         actual_list_dir="list/actual/",
         list_format="bravaislattice_list_{}.txt"
@@ -57,8 +57,8 @@ if __name__ == '__main__':
         data_label_np = np.array([bravaislattice.bravaislattice_number(data_json["number"]) - 1])
         return data_label_np
     function_analysis.get_confusion(
-        ["TRI", "MCLP", "MCLC", "ORCP", "ORCI", "ORCF", "ORCC", "TETP", "TETI",
-         "TRGR", "TRGP", "HEX", "CUBP", "CUBI", "CUBF"], "list/guess/bravaislattice_list_{}.txt", json2inputlabel
+        ["aP", "mP", "mS", "oP", "oS", "oI", "oF", "tP", "tI", "hR", "hP", "cP", "cI", "cF"],
+        "list/guess/bravaislattice_list_{}.txt", json2inputlabel
     )
 
     pass

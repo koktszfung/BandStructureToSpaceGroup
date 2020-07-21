@@ -18,17 +18,17 @@ spacegroup_numbers = [
      *range(25, 35),
      *range(47, 63)),  # P
 
-    (23, 24,
-     44, 45, 46,
-     *range(71, 75)),  # I
+    (20, 21,
+     *range(35, 42),
+     *range(63, 69)),  # A or C
 
     (22,
      42, 43,
      69, 70),  # F
 
-    (20, 21,
-     *range(35, 42),
-     *range(63, 69)),  # A or C
+    (23, 24,
+     44, 45, 46,
+     *range(71, 75)),  # I
 
     # tetragonal
     (*range(75, 79),
@@ -54,14 +54,13 @@ spacegroup_numbers = [
      160, 161,
      166, 167),  # R
 
+    # hexagonal
     (143, 144, 145,
      147,
      *range(149, 155),
      *range(156, 160),
-     *range(162, 166)),  # P
-
-    # hexagonal
-    range(168, 195),
+     *range(162, 166),
+     *range(168, 195)),  # P
 
     # cubic
     (195,

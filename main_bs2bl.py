@@ -38,7 +38,7 @@ def main():
         data_label_np = np.array([bravaislattice.bravaislattice_number(data_json["number"]) - 1])
         return data_input_np, data_label_np
     dataset = data_loader.AnyDataset(
-        [f"list/actual/bravaislattice_list_{blnum}.txt" for blnum in range(1, 16)],
+        [f"list/actual/bravaislattice_list_{blnum}.txt" for blnum in range(1, 15)],
         json2inputlabel, validate_size
     )
     validate_loader, train_loader = data_loader.get_validate_train_loader(dataset, 32)
@@ -51,8 +51,8 @@ def main():
 
     # apply
     function_list.create_any_guess_list_files(
-        device, model, hs_indices, validate_size, num_group=15,
-        in_list_paths=[f"list/actual/bravaislattice_list_{blnum}.txt" for blnum in range(1, 16)],
+        device, model, hs_indices, validate_size, num_group=14,
+        in_list_paths=[f"list/actual/bravaislattice_list_{blnum}.txt" for blnum in range(1, 15)],
         out_list_path_format="list/guess/bravaislattice_list_{}.txt"
     )
 
