@@ -66,8 +66,8 @@ def append_any_guess_list_files(device, model, hs_indices, validate_size, num_gr
                 continue
             with open(out_list_path_format.format(outnum), "a") as file_out:
                 file_out.write(file_path + "\n")
-            print("\r\tcreate guess list: {}/{}".format(i, len(file_paths)), end="")
-        print("\rcreate guess list: {}".format(len(file_paths)))
+            print("\r\tcreate guess list: {}/{}".format(i, split), end="")
+        print("\rcreate guess list: {}".format(split))
 
 
 def create_any_guess_list_files(device, model, hs_indices, validate_size, num_group,

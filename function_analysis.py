@@ -59,7 +59,7 @@ def get_confusion(group_names, guess_list_path_format, json2label):
         for i in range(num_group):
             for j in range(num_group):
                 c = confusion[i, j]
-                plt.gca().text(j, i, f"{c:.2f}", va='center', ha='center', color="grey", fontsize=12)
+                plt.gca().text(j, i, f"{c:.2f}", va='center', ha='center', color="grey", fontsize=10)
     plt.gca().set_ylabel("Guess")
     plt.gca().xaxis.set_label_position('top')
     plt.gca().set_xlabel("Actual")

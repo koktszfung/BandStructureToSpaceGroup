@@ -97,4 +97,4 @@ spacegroup_numbers = [
 def bravaislattice_number(sgnum: int):
     for i, sgnums in enumerate(spacegroup_numbers):
         if sgnum in sgnums:
-            return i
+            return i + 1
