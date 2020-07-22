@@ -5,10 +5,11 @@ import matplotlib.pyplot as plt
 
 
 def total_count(group_numbers, list_dir, list_format):
-    counts = np.zeros(len(group_numbers)).astype(int)
-    for i, index in enumerate(group_numbers):
-        counts[i] = len(open(list_dir + list_format.format(index)).readlines())
-    return counts
+    # counts = np.zeros(len(group_numbers)).astype(int)
+    # for i, index in enumerate(group_numbers):
+    #     counts[i] = len(open(list_dir + list_format.format(index)).readlines())
+    # return counts
+    return np.array([len(open(list_dir + list_format.format(gnum)).readlines()) for gnum in group_numbers])
 
 
 def correct_count(group_numbers, guess_list_dir, actual_list_dir, list_format):
@@ -22,19 +23,16 @@ def correct_count(group_numbers, guess_list_dir, actual_list_dir, list_format):
     return counts
 
 
-def print_result(group_numbers, guess_list_dir, actual_list_dir, list_format):
+def print_result(group_numbers, guess_list_dir, actual_list_dir, list_format, validate_size):
     guess_total = total_count(group_numbers, guess_list_dir, list_format)
-    actual_total = total_count(group_numbers, actual_list_dir, list_format)
+    actual_total = np.floor(total_count(group_numbers, actual_list_dir, list_format)*validate_size)
     guess_correct = correct_count(group_numbers, guess_list_dir, actual_list_dir, list_format)
     print("guess count:", guess_total, guess_total.sum())
     print("actual count:", actual_total, actual_total.sum())
     print("guess correct:", guess_correct, guess_correct.sum())
-
     print("correct percentage in guess:", (1 - (guess_total - guess_correct).sum()/guess_total.sum())*100)
-
     print("TP:", guess_correct)
-    print("TN:", np.full(len(group_numbers), actual_total.sum()) - guess_total - actual_total + guess_correct
-    if len(group_numbers) > 1 else None)
+    print("TN:", np.full(len(group_numbers), actual_total.sum()) - guess_total - actual_total + guess_correct)
     print("FP:", guess_total - guess_correct)
     print("FN:", actual_total - guess_correct)
 
@@ -49,8 +47,8 @@ def get_confusion(num_group, guess_list_path_format, json2label):
             with open(file_name, "r") as file:
                 data_json = json.load(file)
             confusion[i, json2label(data_json)] += 1  # (guess, actual)
-        print(f"\r\t{i}/{num_group}", end="")
-    print(f"\r{num_group}")
+        print(f"\r\tload: {i}/{num_group}", end="")
+    print(f"\rload: {num_group}")
     confusion = confusion/np.maximum(1, confusion.sum(0))[None, :]
     return confusion
 

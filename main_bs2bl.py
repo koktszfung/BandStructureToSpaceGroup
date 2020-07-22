@@ -24,7 +24,7 @@ def main():
         torch.nn.LeakyReLU(),
         torch.nn.Linear(300, 100),
         torch.nn.LeakyReLU(),
-        torch.nn.Linear(100, 15),
+        torch.nn.Linear(100, 14),
         torch.nn.LeakyReLU(),
     )
     model = model.to(device)
@@ -40,7 +40,7 @@ def main():
         return data_input_np, data_label_np
     dataset = data_loader.AnyDataset(
         [f"list/actual/bravaislattice_list_{blnum}.txt" for blnum in range(1, 15)],
-        json2inputlabel, validate_size, shuffle=True
+        json2inputlabel, validate_size
     )
     validate_loader, train_loader = data_loader.get_validate_train_loader(dataset, 32)
 
@@ -57,12 +57,12 @@ def main():
         out_list_path_format="list/guess/bravaislattice_list_{}.txt"
     )
 
-    def json2inputlabel(data_json):
+    def json2label(data_json):
         data_label_np = np.array([bravaislattice.bravaislattice_number(data_json["number"]) - 1])
         return data_label_np
     function_analysis.plot_confusion(
         ["aP", "mP", "mS", "oP", "oS", "oI", "oF", "tP", "tI", "hR", "hP", "cP", "cI", "cF"],
-        "list/guess/bravaislattice_list_{}.txt", json2inputlabel
+        "list/guess/bravaislattice_list_{}.txt", json2label
     )
 
     import winsound

@@ -3,7 +3,6 @@ import os
 import function_list
 
 import crystalsystem
-import latticesystem
 import bravaislattice
 
 if __name__ == "__main__":
@@ -15,30 +14,24 @@ if __name__ == "__main__":
             print(f"dir \"{required_dir}\" exists")
 
     # prepare input data # (Do this every time dataset is changed)
-    # function_list.create_valid_list_file(
-    #     num_bands=100,
-    #     in_data_dir="data/hs_data_2/",
-    #     out_list_path="list/valid_list.txt"
-    # )
-    #
-    # function_list.create_any_actual_list_files(
-    #     num_group=230, in_list_path="list/valid_list.txt",
-    #     out_list_path_format="list/actual/spacegroup_list_{}.txt",
-    #     sgnum2outnum=lambda sgnum: sgnum
-    # )
-    #
-    # function_list.create_any_actual_list_files(
-    #     num_group=7, in_list_path="list/valid_list.txt",
-    #     out_list_path_format="list/actual/crystalsystem_list_{}.txt",
-    #     sgnum2outnum=lambda sgnum: crystalsystem.crystalsystem_number(sgnum)
-    # )
-    #
-    # function_list.create_any_actual_list_files(
-    #     num_group=7, in_list_path="list/valid_list.txt",
-    #     out_list_path_format="list/actual/latticesystem_list_{}.txt",
-    #     sgnum2outnum=lambda sgnum: latticesystem.latticesystem_number(sgnum)
-    # )
-    #
+    function_list.create_valid_list_file(
+        num_bands=100,
+        in_data_dir="data/100_48_d_data/",
+        out_list_path="list/valid_list.txt"
+    )
+
+    function_list.create_any_actual_list_files(
+        num_group=230, in_list_path="list/valid_list.txt",
+        out_list_path_format="list/actual/spacegroup_list_{}.txt",
+        sgnum2outnum=lambda sgnum: sgnum
+    )
+
+    function_list.create_any_actual_list_files(
+        num_group=7, in_list_path="list/valid_list.txt",
+        out_list_path_format="list/actual/crystalsystem_list_{}.txt",
+        sgnum2outnum=lambda sgnum: crystalsystem.crystalsystem_number(sgnum)
+    )
+
     function_list.create_any_actual_list_files(
         num_group=14, in_list_path="list/valid_list.txt",
         out_list_path_format="list/actual/bravaislattice_list_{}.txt",

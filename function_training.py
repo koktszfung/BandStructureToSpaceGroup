@@ -41,6 +41,7 @@ def validate_one_epoch(device, model, criterion, validate_loader):
             if torch.max(output, 1)[1] == data_label:
                 num_correct += 1
         print("\r\tvalidate batch:{}/{}".format(b, len(validate_loader)), end="")
+    val_loss /= num_validate
     num_correct /= num_validate
     return round(val_loss, 4), round(num_correct*100, 4)
 

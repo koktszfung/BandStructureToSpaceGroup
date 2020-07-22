@@ -9,15 +9,13 @@ from torch.utils.data.sampler import SubsetRandomSampler
 
 
 class AnyDataset(Dataset):
-    def __init__(self, in_list_paths, json2inputlabel, validate_size, shuffle: bool):
+    def __init__(self, in_list_paths, json2inputlabel, validate_size):
         validate_inputs = []
         validate_labels = []
         train_inputs = []
         train_labels = []
         if not isinstance(in_list_paths, list):  # if only one path is parsed
             in_list_paths = [in_list_paths]
-        if shuffle:
-            np.random.shuffle(in_list_paths)
         for i, in_list_path in enumerate(in_list_paths):
             if os.stat(in_list_path).st_size == 0:  # if file is empty
                 continue

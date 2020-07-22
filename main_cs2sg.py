@@ -50,7 +50,7 @@ def main_one(csnum):
         return data_input_np, data_label_np
     dataset = data_loader.AnyDataset(
         [f"list/actual/spacegroup_list_{sgnum}.txt" for sgnum in crystalsystem.spacegroup_number_range(csnum)],
-        json2inputlabel, validate_size, shuffle=True
+        json2inputlabel, validate_size
     )
     validate_loader, train_loader = data_loader.get_validate_train_loader(dataset, 32)
 
