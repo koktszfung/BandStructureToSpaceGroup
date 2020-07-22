@@ -6,7 +6,7 @@ import data_loader
 import function_training
 import function_list
 
-import crystalsystem
+import arithmeticcrystalclass
 import function_analysis
 
 
@@ -25,7 +25,7 @@ def main():
         torch.nn.LeakyReLU(),
         torch.nn.Linear(1000, 250),
         torch.nn.LeakyReLU(),
-        torch.nn.Linear(250, 7),
+        torch.nn.Linear(250, 73),
         torch.nn.LeakyReLU(),
     )
     model = model.to(device)
@@ -37,10 +37,10 @@ def main():
     # prepare data
     def json2inputlabel(data_json):
         data_input_np = np.array(data_json["bands"])[:, hs_indices].flatten().T
-        data_label_np = np.array([crystalsystem.crystalsystem_number(data_json["number"]) - 1])
+        data_label_np = np.array([arithmeticcrystalclass.arithmeticcrystalclass_number(data_json["number"]) - 1])
         return data_input_np, data_label_np
     dataset = data_loader.AnyDataset(
-        [f"list/actual/crystalsystem_list_{csnum}.txt" for csnum in range(1, 8)],
+        [f"list/actual/arithmeticcrystalclass_list_{blnum}.txt" for blnum in range(1, 74)],
         json2inputlabel, validate_size
     )
     validate_loader, train_loader = data_loader.get_validate_train_loader(dataset, 32)
@@ -48,14 +48,14 @@ def main():
     # train
     function_training.validate_train_loop(
         device, model, optimizer, scheduler, criterion, validate_loader, train_loader,
-        num_epoch=10, num_epoch_per_validate=5, state_dict_path="state_dicts/state_dict_bs2cs"
+        num_epoch=10, num_epoch_per_validate=5, state_dict_path="state_dicts/state_dict_bs2bl"
     )
 
     # apply
     function_list.create_any_guess_list_files(
-        device, model, hs_indices, validate_size, num_group=7,
-        in_list_paths=[f"list/actual/crystalsystem_list_{csnum}.txt" for csnum in range(1, 8)],
-        out_list_path_format="list/guess/crystalsystem_list_{}.txt"
+        device, model, hs_indices, validate_size, num_group=73,
+        in_list_paths=[f"list/actual/arithmeticcrystalclass_list_{blnum}.txt" for blnum in range(1, 74)],
+        out_list_path_format="list/guess/arithmeticcrystalclass_list_{}.txt"
     )
 
     import winsound
@@ -63,19 +63,19 @@ def main():
 
     # analyse
     function_analysis.print_result(
-        group_numbers=range(1, 8),
+        group_numbers=range(1, 74),
         guess_list_dir="list/guess/",
         actual_list_dir="list/actual/",
-        list_format="crystalsystem_list_{}.txt",
+        list_format="arithmeticcrystalclass_list_{}.txt",
         validate_size=0.1
     )
 
     def json2label(data_json):
-        data_label_np = np.array([crystalsystem.crystalsystem_number(data_json["number"]) - 1])
+        data_label_np = np.array([arithmeticcrystalclass.arithmeticcrystalclass_number(data_json["number"]) - 1])
         return data_label_np
     function_analysis.plot_confusion(
-        ["TRI", "MCL", "ORC", "TET", "TRG", "HEX", "CUB"],
-        "list/guess/crystalsystem_list_{}.txt", json2label
+        range(73),
+        "list/guess/arithmeticcrystalclass_list_{}.txt", json2label
     )
 
 

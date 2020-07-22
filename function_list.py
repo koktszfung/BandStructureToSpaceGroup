@@ -50,7 +50,9 @@ def create_any_actual_list_files(num_group, in_list_path, out_list_path_format, 
 def append_any_guess_list_files(device, model, hs_indices, validate_size, num_group,
                                 in_list_paths, out_list_path_format):
     for in_list_path in in_list_paths:
-        file_paths = np.loadtxt(in_list_path, "U90")
+        if os.stat(in_list_path).st_size == 0:  # if file is empty
+            continue
+        file_paths = np.loadtxt(in_list_path, "U90").reshape((-1,))  # reshape for len 1 list
         split = int(validate_size*len(file_paths))
         for i, file_path in enumerate(file_paths):
             if i > split:

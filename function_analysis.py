@@ -57,15 +57,17 @@ def plot_confusion(group_names, guess_list_path_format, json2label):
     num_group = len(group_names)
     confusion = get_confusion(num_group, guess_list_path_format, json2label)
     plt.figure(figsize=(4, 4))
-    plt.gca().matshow(confusion, cmap="cividis")
-    if num_group < 50:
+    plt.matshow(confusion, fignum=False, cmap="cividis")
+    if num_group < 25:
         for i in range(num_group):
             for j in range(num_group):
                 c = confusion[i, j]
                 plt.gca().text(j, i, f"{c:.2f}", va='center', ha='center', color="grey", fontsize=10)
+        plt.xticks(range(num_group), group_names)
+        plt.yticks(range(num_group), group_names)
+    else:
+        plt.colorbar()
     plt.gca().set_ylabel("Guess")
     plt.gca().xaxis.set_label_position('top')
     plt.gca().set_xlabel("Actual")
-    plt.xticks(range(num_group), group_names)
-    plt.yticks(range(num_group), group_names)
     plt.show()

@@ -57,6 +57,18 @@ def main():
         out_list_path_format="list/guess/bravaislattice_list_{}.txt"
     )
 
+    import winsound
+    winsound.Beep(200, 500)
+
+    # analyse
+    function_analysis.print_result(
+        group_numbers=range(1, 15),
+        guess_list_dir="list/guess/",
+        actual_list_dir="list/actual/",
+        list_format="bravaislattice_list_{}.txt",
+        validate_size=0.1
+    )
+
     def json2label(data_json):
         data_label_np = np.array([bravaislattice.bravaislattice_number(data_json["number"]) - 1])
         return data_label_np
@@ -64,9 +76,6 @@ def main():
         ["aP", "mP", "mS", "oP", "oS", "oI", "oF", "tP", "tI", "hR", "hP", "cP", "cI", "cF"],
         "list/guess/bravaislattice_list_{}.txt", json2label
     )
-
-    import winsound
-    winsound.Beep(200, 500)
 
 
 if __name__ == "__main__":

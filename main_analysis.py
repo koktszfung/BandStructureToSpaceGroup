@@ -3,6 +3,7 @@ import numpy as np
 import function_analysis
 import crystalsystem
 import bravaislattice
+import arithmeticcrystalclass
 
 if __name__ == '__main__':
     # # space group
@@ -35,21 +36,38 @@ if __name__ == '__main__':
     #     ["TRI", "MCL", "ORC", "TET", "TRG", "HEX", "CUB"], "list/guess/crystalsystem_list_{}.txt", json2label
     # )
 
-    # bravais lattice
+    # # bravais lattice
+    # function_analysis.print_result(
+    #     group_numbers=range(1, 15),
+    #     guess_list_dir="list/guess/",
+    #     actual_list_dir="list/actual/",
+    #     list_format="bravaislattice_list_{}.txt",
+    #     validate_size=0.1
+    # )
+    #
+    # def json2label(data_json):
+    #     data_label_np = np.array([bravaislattice.bravaislattice_number(data_json["number"]) - 1])
+    #     return data_label_np
+    # function_analysis.plot_confusion(
+    #     ["aP", "mP", "mS", "oP", "oS", "oI", "oF", "tP", "tI", "hR", "hP", "cP", "cI", "cF"],
+    #     "list/guess/bravaislattice_list_{}.txt", json2label
+    # )
+
+    # arithmetic crystal class
     function_analysis.print_result(
-        group_numbers=range(1, 15),
+        group_numbers=range(1, 74),
         guess_list_dir="list/guess/",
         actual_list_dir="list/actual/",
-        list_format="bravaislattice_list_{}.txt",
+        list_format="arithmeticcrystalclass_list_{}.txt",
         validate_size=0.1
     )
 
     def json2label(data_json):
-        data_label_np = np.array([bravaislattice.bravaislattice_number(data_json["number"]) - 1])
+        data_label_np = np.array([arithmeticcrystalclass.arithmeticcrystalclass_number(data_json["number"]) - 1])
         return data_label_np
     function_analysis.plot_confusion(
-        ["aP", "mP", "mS", "oP", "oS", "oI", "oF", "tP", "tI", "hR", "hP", "cP", "cI", "cF"],
-        "list/guess/bravaislattice_list_{}.txt", json2label
+        range(73),
+        "list/guess/arithmeticcrystalclass_list_{}.txt", json2label
     )
 
     pass

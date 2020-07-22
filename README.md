@@ -3,7 +3,7 @@
  
  2. run main_preparation to prepare directory and list files
  
- 3. run main_bs2sg / main_bs2cs / main_cs2sg to train the neural network and guess list files
+ 3. run main_XX2XX to train the neural network and guess list files
  
  4. run main_analysis to see confusion matrix
  
