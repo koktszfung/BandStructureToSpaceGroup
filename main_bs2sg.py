@@ -38,7 +38,7 @@ def main():
 
     dataset = data_loader.AnyDataset(
         [f"list/actual/spacegroup_list_{sgnum}.txt" for sgnum in range(1, 231)],
-        json2inputlabel, validate_size
+        json2inputlabel, validate_size, shuffle=True
     )
     validate_loader, train_loader = data_loader.get_validate_train_loader(dataset, 32)
 

@@ -7,6 +7,7 @@ import function_training
 import function_list
 
 import bravaislattice
+import function_analysis
 
 
 def main():
@@ -39,7 +40,7 @@ def main():
         return data_input_np, data_label_np
     dataset = data_loader.AnyDataset(
         [f"list/actual/bravaislattice_list_{blnum}.txt" for blnum in range(1, 15)],
-        json2inputlabel, validate_size
+        json2inputlabel, validate_size, shuffle=True
     )
     validate_loader, train_loader = data_loader.get_validate_train_loader(dataset, 32)
 
@@ -54,6 +55,14 @@ def main():
         device, model, hs_indices, validate_size, num_group=14,
         in_list_paths=[f"list/actual/bravaislattice_list_{blnum}.txt" for blnum in range(1, 15)],
         out_list_path_format="list/guess/bravaislattice_list_{}.txt"
+    )
+
+    def json2inputlabel(data_json):
+        data_label_np = np.array([bravaislattice.bravaislattice_number(data_json["number"]) - 1])
+        return data_label_np
+    function_analysis.plot_confusion(
+        ["aP", "mP", "mS", "oP", "oS", "oI", "oF", "tP", "tI", "hR", "hP", "cP", "cI", "cF"],
+        "list/guess/bravaislattice_list_{}.txt", json2inputlabel
     )
 
     import winsound

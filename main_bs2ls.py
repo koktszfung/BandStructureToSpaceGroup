@@ -7,6 +7,7 @@ import function_training
 import function_list
 
 import latticesystem
+import function_analysis
 
 
 def main():
@@ -39,14 +40,14 @@ def main():
         return data_input_np, data_label_np
     dataset = data_loader.AnyDataset(
         [f"list/actual/latticesystem_list_{lsnum}.txt" for lsnum in range(1, 8)],
-        json2inputlabel, validate_size
+        json2inputlabel, validate_size, shuffle=True
     )
     validate_loader, train_loader = data_loader.get_validate_train_loader(dataset, 32)
 
     # train
     function_training.validate_train_loop(
         device, model, optimizer, scheduler, criterion, validate_loader, train_loader,
-        num_epoch=10, num_epoch_per_validate=5, state_dict_path="state_dicts/state_dict_bs2ls"
+        num_epoch=1, num_epoch_per_validate=5, state_dict_path="state_dicts/state_dict_bs2ls"
     )
 
     # apply
@@ -54,6 +55,14 @@ def main():
         device, model, hs_indices, validate_size, num_group=7,
         in_list_paths=[f"list/actual/latticesystem_list_{lsnum}.txt" for lsnum in range(1, 8)],
         out_list_path_format="list/guess/latticesystem_list_{}.txt"
+    )
+
+    def json2inputlabel(data_json):
+        data_label_np = np.array([latticesystem.latticesystem_number(data_json["number"]) - 1])
+        return data_label_np
+    function_analysis.plot_confusion(
+        ["TRI", "MCL", "ORC", "TET", "RHL", "HEX", "CUB"],
+        "list/guess/latticesystem_list_{}.txt", json2inputlabel
     )
 
     import winsound

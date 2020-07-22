@@ -34,18 +34,17 @@ def print_result(group_numbers, guess_list_dir, actual_list_dir, list_format):
 
     print("TP:", guess_correct)
     print("TN:", np.full(len(group_numbers), actual_total.sum()) - guess_total - actual_total + guess_correct
-          if len(group_numbers) > 1 else None)
+    if len(group_numbers) > 1 else None)
     print("FP:", guess_total - guess_correct)
     print("FN:", actual_total - guess_correct)
 
 
-def get_confusion(group_names, guess_list_path_format, json2label):
-    num_group = len(group_names)
+def get_confusion(num_group, guess_list_path_format, json2label):
     confusion = np.zeros((num_group, num_group)).astype(int)
     for i in range(num_group):
-        if os.stat(guess_list_path_format.format(i+1)).st_size == 0:
+        if os.stat(guess_list_path_format.format(i + 1)).st_size == 0:
             continue
-        file_names = np.loadtxt(guess_list_path_format.format(i+1), "U90", ndmin=1)
+        file_names = np.loadtxt(guess_list_path_format.format(i + 1), "U90", ndmin=1)
         for file_name in file_names:
             with open(file_name, "r") as file:
                 data_json = json.load(file)
@@ -53,6 +52,12 @@ def get_confusion(group_names, guess_list_path_format, json2label):
         print(f"\r\t{i}/{num_group}", end="")
     print(f"\r{num_group}")
     confusion = confusion/np.maximum(1, confusion.sum(0))[None, :]
+    return confusion
+
+
+def plot_confusion(group_names, guess_list_path_format, json2label):
+    num_group = len(group_names)
+    confusion = get_confusion(num_group, guess_list_path_format, json2label)
     plt.figure(figsize=(4, 4))
     plt.gca().matshow(confusion, cmap="cividis")
     if num_group < 50:
@@ -66,4 +71,3 @@ def get_confusion(group_names, guess_list_path_format, json2label):
     plt.xticks(range(num_group), group_names)
     plt.yticks(range(num_group), group_names)
     plt.show()
-    return confusion
