@@ -7,13 +7,8 @@
  
  4. run main_analysis to see confusion matrix
  
- Band Structure to crystal system:
-![confusion_matrix_bs2cs](confusion_matrix_bs2cs.png) 
-<br>
-<br>
-
-Band Structure to bravais lattice:
-![confusion_matrix_bs2bl](confusion_matrix_bs2bl.png) 
+Confusion matrix:
+![confusion_matrices](confusion_matrices.png)
 
 ## Details 
 ### Prepare data

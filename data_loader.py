@@ -19,9 +19,9 @@ class AnyDataset(Dataset):
         for i, in_list_path in enumerate(in_list_paths):
             if os.stat(in_list_path).st_size == 0:  # if file is empty
                 continue
-            file_names = np.loadtxt(in_list_path, "U90", ndmin=1)
-            split = int(validate_size*len(file_names))
-            for j, file_name in enumerate(file_names):
+            file_paths = np.loadtxt(in_list_path, "U90", ndmin=1)
+            split = int(validate_size*len(file_paths))
+            for j, file_name in enumerate(file_paths):
                 with open(file_name, "r") as file:
                     data_json = json.load(file)
                 # json2inputlabel is a function parsed to init, which handles a json dict and give input and label

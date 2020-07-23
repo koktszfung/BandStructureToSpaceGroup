@@ -49,13 +49,15 @@ def create_any_actual_list_files(num_group, in_list_path, out_list_path_format, 
 
 def append_any_guess_list_files(device, model, hs_indices, validate_size, num_group,
                                 in_list_paths, out_list_path_format):
+    if not isinstance(in_list_paths, list):  # if only one path is parsed
+        in_list_paths = [in_list_paths]
     for in_list_path in in_list_paths:
         if os.stat(in_list_path).st_size == 0:  # if file is empty
             continue
-        file_paths = np.loadtxt(in_list_path, "U90").reshape((-1,))  # reshape for len 1 list
+        file_paths = np.loadtxt(in_list_path, "U90", ndmin=1)
         split = int(validate_size*len(file_paths))
         for i, file_path in enumerate(file_paths):
-            if i > split:
+            if i > split:  # check data_loader.py for why data <= split is validate data
                 break
             with open(file_path, "r") as file:
                 data_json = json.load(file)

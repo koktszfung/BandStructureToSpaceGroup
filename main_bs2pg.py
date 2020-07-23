@@ -16,16 +16,15 @@ def main():
     # prepare neural network
     validate_size = 0.1
     num_bands = 100
-    hs_indices = [0, 1, 3, 4, 5, 7, 8, 13, 31, 34, 37]  # 11 hs points in Brillouin zone out of 40
-    # hs_indices = range(48)
+    hs_indices = range(48)
 
     model = torch.nn.Sequential(
         torch.nn.LeakyReLU(),
-        torch.nn.Linear(len(hs_indices)*num_bands, 300),
+        torch.nn.Linear(len(hs_indices)*num_bands, 1000),
         torch.nn.LeakyReLU(),
-        torch.nn.Linear(300, 100),
+        torch.nn.Linear(1000, 250),
         torch.nn.LeakyReLU(),
-        torch.nn.Linear(100, 32),
+        torch.nn.Linear(250, 32),
         torch.nn.LeakyReLU(),
     )
     model = model.to(device)
@@ -73,9 +72,18 @@ def main():
     def json2label(data_json):
         data_label_np = np.array([pointgroup.pointgroup_number(data_json["number"]) - 1])
         return data_label_np
-    function_analysis.plot_confusion(
-        range(32),
-        "list/guess/pointgroup_list_{}.txt", json2label
+    function_analysis.show_confusion(
+        json2label,
+        [f"list/guess/pointgroup_list_{i}.txt" for i in range(1, 33)],
+        group_names=[
+            "1", r"$\bar1$",
+            "2", "m", r"$\frac{2}{m}$",
+            "222", "mm2", r"$\frac{2}{m}\frac{2}{m}\frac{2}{m}$",
+            "4", r"$\bar4$", r"$\frac{4}{m}$", "422", "4mm", r"$\bar42m$", r"$\frac{4}{m}\frac{2}{m}\frac{2}{m}$",
+            "3", r"$\bar3$", "32", "3m", r"$\bar3\frac{2}{m}$",
+            "6", r"$\bar6$", r"$\frac{6}{m}$", "622", "6mm", r"$\bar6m2$", r"$\frac{6}{m}\frac{2}{m}\frac{2}{m}$",
+            "23", r"$\frac{2}{m}\bar3$", "432", r"$\bar43m$", r"$\frac{4}{m}\bar3\frac{2}{m}$"
+        ]
     )
 
 

@@ -1,3 +1,13 @@
+# group_names = [
+#     "1", r"$\bar1$",
+#     "2", "m", r"$\frac{2}{m}$",
+#     "222", "mm2", r"$\frac{2}{m}\frac{2}{m}\frac{2}{m}$",
+#     "4", r"$\bar4$", r"$\frac{4}{m}$", "422", "4mm", r"$\bar42m$", r"$\frac{4}{m}\frac{2}{m}\frac{2}{m}$",
+#     "3", r"$\bar3$", "32", "3m", r"$\bar3\frac{2}{m}$",
+#     "6", r"$\bar6$", r"$\frac{6}{m}$", "622", "6mm", r"$\bar6m2$", r"$\frac{6}{m}\frac{2}{m}\frac{2}{m}$",
+#     "23", r"$\frac{2}{m}\bar3$", "432", r"$\bar43m$", r"$\frac{4}{m}\bar3\frac{2}{m}$"
+# ]
+
 spacegroup_numbers = [
     (1,),
     (2,),
@@ -44,3 +54,4 @@ def pointgroup_number(sgnum: int):
     for i, sgnums in enumerate(spacegroup_numbers):
         if sgnum in sgnums:
             return i + 1
+

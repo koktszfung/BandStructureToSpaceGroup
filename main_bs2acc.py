@@ -16,7 +16,6 @@ def main():
     # prepare neural network
     validate_size = 0.1
     num_bands = 100
-    # hs_indices = [0, 1, 3, 4, 5, 7, 8, 13, 31, 34, 37]  # 11 hs points in Brillouin zone out of 40
     hs_indices = range(48)
 
     model = torch.nn.Sequential(
@@ -73,9 +72,10 @@ def main():
     def json2label(data_json):
         data_label_np = np.array([arithmeticcrystalclass.arithmeticcrystalclass_number(data_json["number"]) - 1])
         return data_label_np
-    function_analysis.plot_confusion(
-        range(73),
-        "list/guess/arithmeticcrystalclass_list_{}.txt", json2label
+    function_analysis.show_confusion(
+        json2label,
+        [f"list/guess/arithmeticcrystalclass_list_{i}.txt" for i in range(1, 74)],
+        show_text=False
     )
 
 
